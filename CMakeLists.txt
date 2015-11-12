@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
-project(rinextk)
+project(rinex_reader)
 
 ## To activate c++11
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
@@ -12,7 +12,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra")
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build)
 
 SET(SRCS_RTK_LIB
-	src/rinextk.cpp
+	src/rinex_reader.cpp
 )
 
 ## Build
