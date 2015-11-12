@@ -45,10 +45,61 @@
 
 
 
+#include "../../trilateration/src/structs.h"
+
 class RinexReader
 {
-public:
-	RinexReader();
+public:		// Public methods
+	RinexReader(char *path_obs, char *path_nav/*, char *path_met = NULL*/);
+	int processNextEpoch();
+	gpstk::CommonTime getEpochTime();
+	gpstk::CivilTime getEpochTimePretty();
+	Receiver getReceiverEstECEF() const;
+	Receiver getReceiverEstLLR() const;
+
+	bool isSolutionValid() const;
+	bool isFileFinished() const;
+
+	void printEpochRecap();
+
+	std::vector<SatelliteMeasurement> computeSatPosition();//calcola al rod.time
+	std::vector<SatelliteMeasurement> computeSatPosition(const gpstk::CommonTime &time);//calcola in un momento a scelta
+
+
+	std::vector<SatelliteMeasurement> getMeasurements() const;
+
+protected:	// Protected methods
+	void getEpochMeasures();
+
+
+protected:	// Protected attributes
+
+	// vediamo se sti 2 van bene qui
+	std::vector<gpstk::SatID> prnVec;
+	std::vector<double> rangeVec;
+
+	std::vector<SatelliteMeasurement> measurements;
+
+
+	bool fileFinished;
+
+	gpstk::GPSEphemerisStore bcestore;	// Object to store ephemeris
+	gpstk::PRSolution2 raimSolver;		// RAIM solver
+	gpstk::ZeroTropModel noTropModel;	// Object for void-type tropospheric model
+	gpstk::TropModel *tropModelPtr;		// Pointer to the tropospheric models.
+
+	const double GAMMA = (gpstk::L1_FREQ_GPS/gpstk::L2_FREQ_GPS)*(gpstk::L1_FREQ_GPS/gpstk::L2_FREQ_GPS);
+
+	int indexP1;
+	int indexP2;
+
+	gpstk::Rinex3NavStream rNavFile;    // Object to read Rinex navigation data files
+	gpstk::Rinex3NavData rNavData;      // Object to store Rinex navigation data
+	gpstk::Rinex3NavHeader rNavHeader;  // Object to read the header of Rinex navigation data files
+
+	gpstk::Rinex3ObsStream rObsFile;    // Object to read Rinex observation data files
+	gpstk::Rinex3ObsData rObsData;      // Object to store Rinex observation data
+	gpstk::Rinex3ObsHeader rObsHeader;	// Object to read the header of Rinex observation data files
 
 };
 
