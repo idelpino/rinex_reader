@@ -97,9 +97,9 @@ CommonTime RinexReader::getEpochTime()
 	return rObsData.time;
 }
 
-CivilTime RinexReader::getEpochTimePretty()
+CivilTime RinexReader::timePretty(CommonTime commonTime)
 {
-	return CivilTime(rObsData.time);
+	return CivilTime(commonTime);
 }
 
 Receiver RinexReader::getReceiverEstECEF() const
@@ -152,7 +152,7 @@ bool RinexReader::isFileFinished() const
 
 void RinexReader::printEpochRecap()
 {
-	cout << "### Epoch: " << getEpochTimePretty() << endl;
+	cout << "### Epoch: " << timePretty(getEpochTime()) << endl;
 	cout << setprecision(12);
 
 	// If we got a valid solution, let's print it

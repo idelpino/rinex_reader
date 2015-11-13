@@ -53,7 +53,8 @@ public:		// Public methods
 	RinexReader(char *path_obs, char *path_nav/*, char *path_met = NULL*/);
 	int processNextEpoch();
 	gpstk::CommonTime getEpochTime();
-	gpstk::CivilTime getEpochTimePretty();
+	static gpstk::CivilTime timePretty(gpstk::CommonTime commonTime);
+
 	Receiver getReceiverEstECEF() const;
 	Receiver getReceiverEstLLR() const;
 
