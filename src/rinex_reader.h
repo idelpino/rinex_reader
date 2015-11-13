@@ -43,8 +43,6 @@
 //per leggere il tempo decentemente
 #include "CivilTime.hpp"
 
-
-
 #include "../../trilateration/src/structs.h"
 
 class RinexReader
@@ -63,11 +61,11 @@ public:		// Public methods
 
 	void printEpochRecap();
 
-	std::vector<SatelliteMeasurement> computeSatPosition();//calcola al rod.time
-	std::vector<SatelliteMeasurement> computeSatPosition(const gpstk::CommonTime &time);//calcola in un momento a scelta
+	void updateMeasurementAtTime(const gpstk::CommonTime &time);//calcola in un momento a scelta
 
 
 	std::vector<SatelliteMeasurement> getMeasurements() const;
+	std::vector<gpstk::Triple> getSatVelocities() const;
 
 protected:	// Protected methods
 	void getEpochMeasures();
@@ -80,6 +78,7 @@ protected:	// Protected attributes
 	std::vector<double> rangeVec;
 
 	std::vector<SatelliteMeasurement> measurements;
+	std::vector<gpstk::Triple> satVelocities;
 
 
 	bool fileFinished;

@@ -66,7 +66,8 @@ int RinexReader::processNextEpoch()
 
 			getEpochMeasures(); //salva in prnVec e rangeVec
 
-			measurements = computeSatPosition(rObsData.time);
+			updateMeasurementAtTime(rObsData.time);
+			measurements = getMeasurements();
 
 
 
@@ -232,16 +233,23 @@ void RinexReader::getEpochMeasures()
 	}  // End of 'for( it = rObsData.obs.begin(); it!= rObsData.obs.end(); ...'
 }
 
+std::vector<gpstk::Triple> RinexReader::getSatVelocities() const
+{
+	return satVelocities;
+}
+
 std::vector<SatelliteMeasurement> RinexReader::getMeasurements() const
 {
 	return measurements;
 }
 
-vector<SatelliteMeasurement> RinexReader::computeSatPosition(const CommonTime &time)
+void RinexReader::updateMeasurementAtTime(const CommonTime &time)
 {
+	measurements.clear();
+	satVelocities.clear();
+
 	int ret;
 	Matrix<double> calcPos;
-	vector<SatelliteMeasurement> satPos;
 
 	ret = raimSolver.PrepareAutonomousSolution(time, //questo e' il TOA (time of arrival), cioe' l'istante nel quale voglio predire la posizione dei satelliti
 										 prnVec,
@@ -261,8 +269,19 @@ vector<SatelliteMeasurement> RinexReader::computeSatPosition(const CommonTime &t
 		sm.pos = Point<double>(calcPos[i][0], calcPos[i][1], calcPos[i][2]);
 		sm.pseudorange = calcPos[i][3];
 
-		satPos.push_back(sm);
+		measurements.push_back(sm);
+
+
+		/*
+		 * ATTENZIONE: questa velocit asi basa sul ephemerids store,
+		 * non su i valori corretti dal solver!
+		 */
+		// get satellites' velocities
+		satVelocities.push_back(bcestore.getXvt(prnVec[i], time).getVel());
 	}
 
-	return satPos;
+
+
+
+
 }

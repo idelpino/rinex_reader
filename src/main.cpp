@@ -30,7 +30,11 @@ int main(int argc, char** argv)
 		if (a == 'y')
 		{
 			for (int i = 0; i < 30; ++i) {
-				cout << rr.computeSatPosition(rr.getEpochTime() + i)[0].toString() << endl;
+
+				// update the measurements
+				rr.updateMeasurementAtTime(rr.getEpochTime() + i);
+
+				cout << rr.getMeasurements()[0].toString() << endl;
 
 			}
 			cout << endl;
